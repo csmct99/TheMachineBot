@@ -1,0 +1,55 @@
+{
+	"help" : [
+	"help",
+	"whatdo",
+	"what?",
+	"what",
+	"?",
+	"h",
+	"-?"
+	],
+
+	"echo" : [
+	"echo",
+	"simonsays",
+	"say",
+	"repeat"
+	],
+
+	"styles" : [
+	"showStyles",
+	"styles",
+	"stylelist",
+	"markup"
+	],
+
+	"alias" : [
+	"alias",
+	"aliases",
+	"names",
+	"nicknames"
+	],
+
+	"eval" : [
+	"eval",
+	"evaluate",
+	"do"
+	],
+
+	"create" : [
+	"create",
+	"make"
+	],
+
+	"commands" : [
+		"commands",
+		"allcommands",
+		"commandlist",
+		"commandslist"
+	],
+
+	"timedMessages" : [
+		"timed",
+		"ad"
+	]
+}

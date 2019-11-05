@@ -1,0 +1,16 @@
+{
+  "name": "AION_the_gangsta",
+  "version": "1.0.0",
+  "description": "A slave",
+  "main": "bot.js",
+  "author": "Connor McTear, Nathan Welk",
+  "dependencies": {
+    "bufferutil": "^4.0.1",
+    "colors": "^1.3.3",
+    "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
+    "discord.js": "^11.5.1",
+    "fs": "0.0.1-security",
+    "python": "0.0.4",
+    "winston": "^3.2.1"
+  }
+}
