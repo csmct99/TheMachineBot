@@ -44,26 +44,19 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 
 	lastMessageChannelID = channelID;
 
-    if (message.substring(0, 1) === '!' && channelID == "594966852569137163") { //Keyword for now, prob gunna change later
-		debug.log(channelID);
+    if (message.substring(0, 1) === '!' && userID == "173823924025556993") { //Keyword for now, prob gunna change later
         let args = message.substring(1).split(' '); // Split at spaces
         let cmd = args[0].toLowerCase(); //after ! but before x y z args  --->       !______ x y z
 
         args = args.splice(1); // list of everything after !command
 
-		let commandAliasMatch = false; //flag for if the command matches any in the master list
-
 		allCommands.forEach(function(command){  // for each command in the master list
-			if(command.aliases.includes(cmd)){  //If the command has an alias in this command's alias list
+			if(command.name == cmd){  //If the command has an alias in this command's alias list
+				debug.log("Executing command: " + command.name);
 				command.execute(user, userID, channelID, message, cmd, args);
-				commandAliasMatch = true
+				debug.log("Complete: " + command.name);
 			}
 		});
-
-		if(!commandAliasMatch){ //No command matches the given input AKA wtf is the user trying to say?
-			sendMessage(selectRandomFromList(UNKNOWN_COMMAND_MESSAGE)); // Send a random "invalid command" message back
-		}
-
 	}
 });
 
@@ -85,11 +78,9 @@ class command{
 	 * @param documentation STRING : documentation regarding the command. Please include example usage if it can use arguments
 	 * @param logic FUNCTION : the function to be run when this command is called. make sure it takes in (user, userID, channelID, message, cmd, args)
 	 */
-	constructor(name, aliases, documentation, logic){
+	constructor(name, logic){
 
 		this.name = name;
-		this.aliases = aliases;
-		this.documentation = documentation;
 		this.logic = logic;
 
 		allCommands.push(this); //Add this command to the master list
@@ -97,27 +88,37 @@ class command{
 	}
 
 	execute(user, userID, channelID, message, cmd, args){
-		this.logic(user, userID, channelID, message, cmd, args);
-	}
-
-	toString(){
-		return "Function name : " + this.name + "\nFunction aliases: " + this.aliases + "\n function documentation: ";
+		try{
+			this.logic(user, userID, channelID, message, cmd, args);
+		}catch(e){
+			debug.logError("ERROR running " + command.name);
+			debug.logDetails(e);
+		}
 	}
 }
 
 //Commands
 
-new command("Echo", alias.echo, doc.echo, function(user, userID, channelID, message, cmd, args){
+new command("echo", function(user, userID, channelID, message, cmd, args){
 	let batch = "";
 
 	args.forEach(function(arg){
 		batch += arg + " ";
 	});
-	postAd();
+
 	sendMessage(batch);
 });
 
-new command("timedMessages", alias.timedMessages, doc.timedMessages, function t(user, userID, channelID, message, cmd, args){
+new command("getallusers", function(user, userID, channelID, message, cmd, args){
+
+	let server = bot.servers[args[0]];
+
+	console.log(server);
+
+
+});
+
+new command("postad", function t(user, userID, channelID, message, cmd, args){
 
 	postAd();
 	setTimeout(function(){
@@ -126,6 +127,14 @@ new command("timedMessages", alias.timedMessages, doc.timedMessages, function t(
 	}, 60000 * 60 * 6.2);
 });
 
+function postAd(){
+	sendMessage("Posting message");
+	fs.readFile("./ad.txt", 'utf8', function(err, data) {
+		if (err) throw err;
+		uploadFile(data);
+	});
+}
+
 /**
  * Sends message to the channel with ID ChannelID
  * @param message STRING : message to be sent
@@ -133,15 +142,15 @@ new command("timedMessages", alias.timedMessages, doc.timedMessages, function t(
  */
 function sendMessage(message,channelID = "173823924025556993"){
 
-	bot.sendMessage( { to: channelID, message: message});
-	debug.log("Sent Message : " + colors.grey(message.split("\n")[0])); //Only prints the first line of the message for readability of logs
-}
-
-function postAd(){
-	fs.readFile("./ad.txt", 'utf8', function(err, data) {
-		if (err) throw err;
-		uploadFile(data);
+	bot.sendMessage( { to: channelID, message: message}, function(error, response){
+		if(error){
+			debug.logError("Sending Message Failed");
+			debug.logDetails(response);
+		}else{
+			debug.log("Sent Message : " + colors.grey(message.split("\n")[0])); //Only prints the first line of the message for readability of logs
+		}
 	});
+
 }
 
 function uploadFile(message, fileLinks = "", channelID = "583937326527545344"){

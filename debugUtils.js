@@ -10,6 +10,11 @@ exports.logWarning = function(message){
     console.log("[" + colors.yellow("!") + "] " + message);
 };
 
+exports.logDetails = function(message){
+
+    console.log(colors.grey(message));
+};
+
 /**
  * Logs urgent error in red
  * @param message message to be logged
