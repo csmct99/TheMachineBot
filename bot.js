@@ -112,8 +112,18 @@ new command("echo", function(user, userID, channelID, message, cmd, args){
 new command("getallusers", function(user, userID, channelID, message, cmd, args){
 
 	let server = bot.servers[args[0]];
+	let members = server.members;
 
-	console.log(server);
+	for(let id in members){
+		let batch = "";
+
+		members[id].roles.forEach(function(rID){
+			batch += server.roles[rID].name + " - ";
+
+		});
+
+		console.log(colors.green(getUser(id).username) + " | " + colors.red(batch));
+	}
 
 
 });
@@ -126,6 +136,11 @@ new command("postad", function t(user, userID, channelID, message, cmd, args){
 
 	}, 60000 * 60 * 6.2);
 });
+
+function getUser(memberID) {
+	let user = bot.users[memberID];
+	return user;
+}
 
 function postAd(){
 	sendMessage("Posting message");
